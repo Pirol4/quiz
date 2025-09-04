@@ -115,3 +115,25 @@ def test_correct_more_than_max_selected_choices():
     choice2 = question.add_choice("b", True)
     with pytest.raises(Exception):
         question.correct_selected_choices([choice1.id, choice2.id])
+
+@pytest.fixture
+def question_with_choices():
+    q = Question(title="Pergunta de teste", points=10, max_selections=2)
+    q.add_choice("a", is_correct=True)
+    q.add_choice("b", is_correct=False)
+    q.add_choice("c", is_correct=True)
+    return q
+
+def test_fixture_creates_question_with_three_choices(question_with_choices):
+    q = question_with_choices
+    assert len(q.choices) == 3
+    assert q.title == "Pergunta de teste"
+    correct_choices = [c for c in q.choices if c.is_correct]
+    assert len(correct_choices) == 2
+
+def test_remove_choice_with_fixture(question_with_choices):
+    q = question_with_choices
+    q.remove
+    selected_ids = [q.choices[0].id, q.choices[1].id]  # 1 correta, 1 incorreta
+    correct_selected = q.correct_selected_choices(selected_ids)
+    assert correct_selected == [q.choices[0].id]
