@@ -133,7 +133,5 @@ def test_fixture_creates_question_with_three_choices(question_with_choices):
 
 def test_remove_choice_with_fixture(question_with_choices):
     q = question_with_choices
-    q.remove
-    selected_ids = [q.choices[0].id, q.choices[1].id]  # 1 correta, 1 incorreta
-    correct_selected = q.correct_selected_choices(selected_ids)
-    assert correct_selected == [q.choices[0].id]
+    q.remove_choice_by_id(q.choices[0].id)
+    assert len(question_with_choices.choices) == 2
